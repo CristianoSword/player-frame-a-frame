@@ -2,6 +2,7 @@
 # ▶ player frame a frame
 
 Visualizador de vídeo quadro a quadro — roda direto no navegador, sem dependências.
+Link: https://cristianosword.github.io/player-frame-a-frame/
 
 ![HTML puro](https://img.shields.io/badge/HTML-puro-333) ![sem instalação](https://img.shields.io/badge/sem-instalação-333) ![pt-BR](https://img.shields.io/badge/lang-pt--BR-333)
 
