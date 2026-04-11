@@ -96,3 +96,26 @@ test("loading metadata reveals the player and populates video info", () => {
   assert.equal(app.elements.infoDuration.textContent, "3.500s");
   assert.equal(app.elements.infoResolution.textContent, "1920x1080");
 });
+
+test("reloading a file resets state and revokes the previous object URL", () => {
+  const { app, revokedUrls, document } = createEnvironment();
+  const firstFile = { name: "first.mp4" };
+  const secondFile = { name: "second.mp4" };
+
+  app.state.isLooping = true;
+  app.elements.speedInput.value = "3";
+  app.elements.fpsInput.value = "48";
+  app.loadVideoFile(firstFile);
+
+  defineVideoMetrics(app.elements.video, { duration: 10, currentTime: 2 });
+  app.elements.video.dispatchEvent(new document.defaultView.Event("loadedmetadata"));
+  app.elements.video.currentTime = 2;
+
+  app.loadVideoFile(secondFile);
+
+  assert.deepEqual(revokedUrls, ["blob:video-1"]);
+  assert.equal(app.elements.speedInput.value, "0");
+  assert.equal(app.elements.speedLabel.textContent, "1x");
+  assert.equal(app.elements.loopButton.getAttribute("aria-pressed"), "false");
+  assert.equal(app.elements.seek.value, "0");
+});
