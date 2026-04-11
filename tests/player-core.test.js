@@ -9,6 +9,7 @@ import {
   getFrameNumber,
   getSeekValue,
   getSpeedConfig,
+  isEditableTarget,
   sanitizeFps
 } from "../player-core.js";
 
@@ -35,4 +36,11 @@ test("formatters expose stable UI strings", () => {
 test("speed config reflects reverse playback labels", () => {
   assert.deepEqual(getSpeedConfig("-2"), { multiplier: -4, label: "-4x" });
   assert.deepEqual(getSpeedConfig("9"), { multiplier: 1, label: "1x" });
+});
+
+test("editable target detection ignores player shortcuts inside inputs", () => {
+  assert.equal(isEditableTarget({ tagName: "input" }), true);
+  assert.equal(isEditableTarget({ tagName: "textarea" }), true);
+  assert.equal(isEditableTarget({ isContentEditable: true }), true);
+  assert.equal(isEditableTarget({ tagName: "div" }), false);
 });
