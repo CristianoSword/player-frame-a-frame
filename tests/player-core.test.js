@@ -3,6 +3,8 @@ import assert from "node:assert/strict";
 
 import {
   clampTime,
+  formatResolution,
+  formatTime,
   frameStepFromFps,
   getFrameNumber,
   getSeekValue,
@@ -21,4 +23,10 @@ test("frame helpers compute frame and seek data consistently", () => {
   assert.equal(getSeekValue(5, 10), 500);
   assert.equal(clampTime(15, 10), 10);
   assert.equal(clampTime(-2, 10), 0);
+});
+
+test("formatters expose stable UI strings", () => {
+  assert.equal(formatTime(1.23456), "1.235s");
+  assert.equal(formatResolution(1920, 1080), "1920x1080");
+  assert.equal(formatResolution(0, 1080), "-");
 });
