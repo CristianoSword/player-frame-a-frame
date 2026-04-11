@@ -63,7 +63,8 @@ function createEnvironment() {
   return {
     app: setupPlayerApp(document, window),
     document,
-    revokedUrls
+    revokedUrls,
+    window
   };
 }
 
@@ -118,4 +119,14 @@ test("reloading a file resets state and revokes the previous object URL", () => 
   assert.equal(app.elements.speedLabel.textContent, "1x");
   assert.equal(app.elements.loopButton.getAttribute("aria-pressed"), "false");
   assert.equal(app.elements.seek.value, "0");
+});
+
+test("keyboard shortcuts are ignored while editing the FPS input", () => {
+  const { app, window } = createEnvironment();
+
+  app.elements.video.src = "blob:video-1";
+  app.elements.fpsInput.focus();
+  window.dispatchEvent(new window.KeyboardEvent("keydown", { key: " ", bubbles: true }));
+
+  assert.equal(app.state.isPlaying, false);
 });
