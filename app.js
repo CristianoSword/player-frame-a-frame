@@ -10,6 +10,57 @@ import {
   sanitizeFps
 } from "./player-core.js";
 
+const TRANSLATIONS = {
+  en: {
+    htmlLang: "en",
+    title: "\u25b6 player frame a frame",
+    languageLabel: "Language",
+    dropTitle: "Drop a video here or click to open",
+    dropSub: "MP4, WebM, MOV, AVI...",
+    prev: "prev",
+    play: "play",
+    pause: "pause",
+    next: "next",
+    loop: "loop",
+    speed: "speed",
+    frame: "frame",
+    time: "time",
+    duration: "duration",
+    resolution: "resolution",
+    shortcutFrames: "\u2190 \u2192 frame by frame",
+    shortcutPlay: "space play/pause",
+    footerCredit: "Made with \u2665 by Cristiano Camacho",
+    seekLabel: "Video timeline",
+    speedAria: "Playback speed",
+    fileInputAria: "Choose a video file"
+  },
+  "pt-BR": {
+    htmlLang: "pt-BR",
+    title: "\u25b6 player frame a frame",
+    languageLabel: "Idioma",
+    dropTitle: "Solte um video aqui ou clique para abrir",
+    dropSub: "MP4, WebM, MOV, AVI...",
+    prev: "prev",
+    play: "play",
+    pause: "pause",
+    next: "next",
+    loop: "loop",
+    speed: "velocidade",
+    frame: "frame",
+    time: "tempo",
+    duration: "duracao",
+    resolution: "resolucao",
+    shortcutFrames: "\u2190 \u2192 frame a frame",
+    shortcutPlay: "espaco play/pause",
+    footerCredit: "Feito com \u2665 por Cristiano Camacho",
+    seekLabel: "Linha do tempo do video",
+    speedAria: "Velocidade de reproducao",
+    fileInputAria: "Escolher arquivo de video"
+  }
+};
+
+const DEFAULT_LANGUAGE = "en";
+
 export function setupPlayerApp(doc = document, win = window) {
   const elements = {
     video: doc.getElementById("vid"),
@@ -30,7 +81,8 @@ export function setupPlayerApp(doc = document, win = window) {
     infoDuration: doc.getElementById("i-dur"),
     infoResolution: doc.getElementById("i-res"),
     prevButton: doc.getElementById("btn-prev"),
-    nextButton: doc.getElementById("btn-next")
+    nextButton: doc.getElementById("btn-next"),
+    languageSelect: doc.getElementById("language-select")
   };
 
   const ctx = elements.canvas.getContext("2d");
@@ -41,8 +93,41 @@ export function setupPlayerApp(doc = document, win = window) {
     frameRequestId: null,
     speedMultiplier: 1,
     lastTimestamp: null,
-    activeObjectUrl: null
+    activeObjectUrl: null,
+    language: DEFAULT_LANGUAGE
   };
+
+  function getText() {
+    return TRANSLATIONS[state.language] ?? TRANSLATIONS[DEFAULT_LANGUAGE];
+  }
+
+  function applyLanguage(language) {
+    state.language = TRANSLATIONS[language] ? language : DEFAULT_LANGUAGE;
+    const text = getText();
+
+    doc.documentElement.lang = text.htmlLang;
+    doc.title = "Player Frame a Frame";
+    elements.seek.setAttribute("aria-label", text.seekLabel);
+    elements.speedInput.setAttribute("aria-label", text.speedAria);
+    elements.fileInput.setAttribute("aria-label", text.fileInputAria);
+
+    const translatable = doc.querySelectorAll("[data-i18n]");
+    for (const node of translatable) {
+      const key = node.getAttribute("data-i18n");
+      if (!key || !(key in text)) {
+        continue;
+      }
+
+      node.innerHTML = text[key];
+    }
+
+    if (elements.languageSelect) {
+      elements.languageSelect.value = state.language;
+    }
+
+    updatePlayButton();
+    updateInfo();
+  }
 
   function updateLoopButton() {
     elements.loopButton.classList.toggle("accent", state.isLooping);
@@ -50,7 +135,11 @@ export function setupPlayerApp(doc = document, win = window) {
   }
 
   function updatePlayButton() {
-    elements.playButton.textContent = state.isPlaying ? "\u23f8 pause" : "\u25b6 play";
+    const text = getText();
+    const verb = state.isPlaying ? text.pause : text.play;
+    const icon = state.isPlaying ? "\u23f8" : "\u25b6";
+
+    elements.playButton.innerHTML = `${icon} <span data-i18n="${state.isPlaying ? "pause" : "play"}">${verb}</span>`;
     elements.playButton.classList.toggle("accent", state.isPlaying);
     elements.playButton.setAttribute("aria-pressed", String(state.isPlaying));
   }
@@ -83,11 +172,12 @@ export function setupPlayerApp(doc = document, win = window) {
   }
 
   function updateInfo() {
+    const text = getText();
     const currentFrame = getFrameNumber(elements.video.currentTime, elements.fpsInput.value);
     elements.infoFrame.textContent = String(currentFrame);
     elements.infoTime.textContent = formatTime(elements.video.currentTime);
     elements.seek.value = String(getSeekValue(elements.video.currentTime, elements.video.duration));
-    elements.overlay.textContent = `frame ${currentFrame}  ${formatTime(elements.video.currentTime)}`;
+    elements.overlay.textContent = `${text.frame} ${currentFrame}  ${formatTime(elements.video.currentTime)}`;
   }
 
   function drawFrame() {
@@ -204,7 +294,7 @@ export function setupPlayerApp(doc = document, win = window) {
     elements.infoTime.textContent = "0.000s";
     elements.infoDuration.textContent = "-";
     elements.infoResolution.textContent = "-";
-    elements.overlay.textContent = "frame -";
+    elements.overlay.textContent = `${getText().frame} -`;
   }
 
   function revokeObjectUrl() {
@@ -315,6 +405,9 @@ export function setupPlayerApp(doc = document, win = window) {
     elements.fpsInput.value = String(sanitizeFps(elements.fpsInput.value));
     updateInfo();
   });
+  elements.languageSelect?.addEventListener("change", event => {
+    applyLanguage(event.target.value);
+  });
   elements.video.addEventListener("loadedmetadata", handleLoadedMetadata);
   elements.video.addEventListener("seeked", drawFrame);
   elements.video.addEventListener("timeupdate", () => {
@@ -332,7 +425,7 @@ export function setupPlayerApp(doc = document, win = window) {
   win.addEventListener("beforeunload", revokeObjectUrl);
 
   resetPlayerState();
-  updatePlayButton();
+  applyLanguage(DEFAULT_LANGUAGE);
 
   return {
     destroy() {
