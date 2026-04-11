@@ -1,6 +1,11 @@
 # ▶ player frame a frame
 
-[Read in English](./README.md)
+<h4 align="center">
+    <p>
+        <b>Português</b> |
+        <a href="./README.md">English</a>
+    </p>
+</h4>
 
 Visualizador de video quadro a quadro que roda direto no navegador, sem dependencias.  
 Link: https://cristianosword.github.io/player-frame-a-frame/

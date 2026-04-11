@@ -1,6 +1,11 @@
 # ▶ player frame a frame
 
-[Read in Portuguese (pt-BR)](./README-ptbr.md)
+<h4 align="center">
+    <p>
+        <a href="./README-ptbr.md">Português</a> |
+        <b>English</b>
+    </p>
+</h4>
 
 Frame-by-frame video viewer that runs directly in the browser with no dependencies.  
 Link: https://cristianosword.github.io/player-frame-a-frame/
