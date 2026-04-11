@@ -38,6 +38,7 @@ export function setupPlayerApp(doc = document, win = window) {
     isPlaying: false,
     isLooping: false,
     rafId: null,
+    frameRequestId: null,
     speedMultiplier: 1,
     lastTimestamp: null,
     activeObjectUrl: null
@@ -71,6 +72,13 @@ export function setupPlayerApp(doc = document, win = window) {
       win.cancelAnimationFrame(state.rafId);
       state.rafId = null;
     }
+    if (state.frameRequestId !== null && typeof elements.video.cancelVideoFrameCallback === "function") {
+      elements.video.cancelVideoFrameCallback(state.frameRequestId);
+      state.frameRequestId = null;
+    }
+    if (typeof elements.video.pause === "function") {
+      elements.video.pause();
+    }
     updatePlayButton();
   }
 
@@ -87,6 +95,27 @@ export function setupPlayerApp(doc = document, win = window) {
       ctx.drawImage(elements.video, 0, 0, elements.canvas.width, elements.canvas.height);
     }
     updateInfo();
+  }
+
+  function scheduleFrameDraw() {
+    if (!state.isPlaying || state.speedMultiplier <= 0) {
+      return;
+    }
+
+    if (typeof elements.video.requestVideoFrameCallback === "function") {
+      state.frameRequestId = elements.video.requestVideoFrameCallback(() => {
+        state.frameRequestId = null;
+        drawFrame();
+        scheduleFrameDraw();
+      });
+      return;
+    }
+
+    state.rafId = win.requestAnimationFrame(() => {
+      state.rafId = null;
+      drawFrame();
+      scheduleFrameDraw();
+    });
   }
 
   function stepFrame(direction) {
@@ -140,6 +169,24 @@ export function setupPlayerApp(doc = document, win = window) {
     state.isPlaying = true;
     state.lastTimestamp = null;
     updatePlayButton();
+
+    if (state.speedMultiplier > 0) {
+      elements.video.loop = state.isLooping;
+      elements.video.playbackRate = state.speedMultiplier;
+      const maybePromise = typeof elements.video.play === "function" ? elements.video.play() : null;
+      scheduleFrameDraw();
+
+      if (maybePromise && typeof maybePromise.catch === "function") {
+        maybePromise.catch(() => {
+          stopPlayback();
+        });
+      }
+      return;
+    }
+
+    if (typeof elements.video.pause === "function") {
+      elements.video.pause();
+    }
     state.rafId = win.requestAnimationFrame(tick);
   }
 
@@ -256,6 +303,7 @@ export function setupPlayerApp(doc = document, win = window) {
   });
   elements.loopButton.addEventListener("click", () => {
     state.isLooping = !state.isLooping;
+    elements.video.loop = state.isLooping && state.speedMultiplier > 0;
     updateLoopButton();
   });
   elements.seek.addEventListener("input", () => {
@@ -269,6 +317,17 @@ export function setupPlayerApp(doc = document, win = window) {
   });
   elements.video.addEventListener("loadedmetadata", handleLoadedMetadata);
   elements.video.addEventListener("seeked", drawFrame);
+  elements.video.addEventListener("timeupdate", () => {
+    if (state.isPlaying && state.speedMultiplier > 0) {
+      updateInfo();
+    }
+  });
+  elements.video.addEventListener("ended", () => {
+    if (!state.isLooping) {
+      stopPlayback();
+      drawFrame();
+    }
+  });
   win.addEventListener("keydown", onGlobalKeydown);
   win.addEventListener("beforeunload", revokeObjectUrl);
 
