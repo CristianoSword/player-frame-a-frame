@@ -8,6 +8,7 @@ import {
   frameStepFromFps,
   getFrameNumber,
   getSeekValue,
+  getSpeedConfig,
   sanitizeFps
 } from "../player-core.js";
 
@@ -29,4 +30,9 @@ test("formatters expose stable UI strings", () => {
   assert.equal(formatTime(1.23456), "1.235s");
   assert.equal(formatResolution(1920, 1080), "1920x1080");
   assert.equal(formatResolution(0, 1080), "-");
+});
+
+test("speed config reflects reverse playback labels", () => {
+  assert.deepEqual(getSpeedConfig("-2"), { multiplier: -4, label: "-4x" });
+  assert.deepEqual(getSpeedConfig("9"), { multiplier: 1, label: "1x" });
 });
