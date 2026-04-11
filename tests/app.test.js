@@ -17,6 +17,8 @@ function createEnvironment() {
   const { document } = window;
   const revokedUrls = [];
   let objectUrlCount = 0;
+  let rafId = 0;
+  const rafCallbacks = new Map();
 
   Object.defineProperty(window.HTMLCanvasElement.prototype, "getContext", {
     configurable: true,
@@ -45,11 +47,14 @@ function createEnvironment() {
   });
 
   window.requestAnimationFrame = callback => {
-    callback(16);
-    return 1;
+    rafId += 1;
+    rafCallbacks.set(rafId, callback);
+    return rafId;
   };
 
-  window.cancelAnimationFrame = () => {};
+  window.cancelAnimationFrame = id => {
+    rafCallbacks.delete(id);
+  };
 
   window.URL.createObjectURL = () => {
     objectUrlCount += 1;
@@ -64,7 +69,11 @@ function createEnvironment() {
     app: setupPlayerApp(document, window),
     document,
     revokedUrls,
-    window
+    window,
+    getNextFrameCallback() {
+      const firstEntry = rafCallbacks.entries().next().value;
+      return firstEntry ? firstEntry[1] : null;
+    }
   };
 }
 
@@ -129,4 +138,18 @@ test("keyboard shortcuts are ignored while editing the FPS input", () => {
   window.dispatchEvent(new window.KeyboardEvent("keydown", { key: " ", bubbles: true }));
 
   assert.equal(app.state.isPlaying, false);
+});
+
+test("keyboard shortcuts still control playback when focus is outside inputs", () => {
+  const { app, window, getNextFrameCallback } = createEnvironment();
+
+  app.elements.video.src = "blob:video-1";
+  defineVideoMetrics(app.elements.video, { duration: 10, currentTime: 1 });
+
+  window.dispatchEvent(new window.KeyboardEvent("keydown", { key: " ", bubbles: true }));
+  assert.equal(app.state.isPlaying, true);
+  assert.equal(app.elements.playButton.textContent, "\u23f8 pause");
+
+  const callback = getNextFrameCallback();
+  assert.ok(callback);
 });
