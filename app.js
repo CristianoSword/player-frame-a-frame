@@ -392,6 +392,21 @@ export function setupPlayerApp(doc = document, win = window) {
       } else {
         startPlayback();
       }
+      return;
+    }
+
+    if (event.key.toLowerCase() === "m") {
+      event.preventDefault();
+      elements.video.muted = !elements.video.muted;
+      updateMuteButton();
+      return;
+    }
+
+    if (/^[1-7]$/.test(event.key)) {
+      event.preventDefault();
+      const speedValue = String(Number(event.key) - 4);
+      elements.speedInput.value = speedValue;
+      updateSpeedLabel();
     }
   }
 
