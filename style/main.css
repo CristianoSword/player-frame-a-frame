@@ -113,35 +113,43 @@ h1 {
 
 .drop-zone {
   width: 100%;
-  border: 1.5px dashed var(--border);
-  border-radius: 10px;
-  padding: 3rem 1rem;
+  border: 2px dashed var(--border);
+  border-radius: 16px;
+  padding: 4rem 2rem;
   text-align: center;
   cursor: pointer;
-  color: var(--text-muted);
-  font-size: 14px;
-  transition: background 0.15s, border-color 0.15s;
-  background: transparent;
-  font: inherit;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--panel);
+  backdrop-filter: var(--glass);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
 }
 
 .drop-zone:hover,
 .drop-zone:focus-visible,
 .drop-zone.is-dragover {
-  background: var(--panel);
-  border-color: var(--border-strong);
-  outline: none;
+  border-color: var(--accent);
+  background: rgba(79, 70, 229, 0.05);
+  transform: scale(1.01);
 }
 
 .drop-zone .icon {
-  font-size: 28px;
-  margin-bottom: 10px;
+  font-size: 3rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.drop-zone .drop-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .drop-zone .sub {
-  font-size: 12px;
-  margin-top: 6px;
-  color: #3a3a3a;
+  font-size: 0.875rem;
+  color: var(--text-muted);
 }
 
 #player-wrap {
