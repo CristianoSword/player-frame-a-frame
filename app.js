@@ -371,21 +371,21 @@ export function setupPlayerApp(doc = document, win = window) {
       return;
     }
 
-    if (event.key === "ArrowRight") {
+    if (event.key === "ArrowRight" || event.key.toLowerCase() === "l") {
       event.preventDefault();
       stopPlayback();
       stepFrame(1);
       return;
     }
 
-    if (event.key === "ArrowLeft") {
+    if (event.key === "ArrowLeft" || event.key.toLowerCase() === "j") {
       event.preventDefault();
       stopPlayback();
       stepFrame(-1);
       return;
     }
 
-    if (event.key === " ") {
+    if (event.key === " " || event.key.toLowerCase() === "k") {
       event.preventDefault();
       if (state.isPlaying) {
         stopPlayback();
