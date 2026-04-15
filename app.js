@@ -92,7 +92,8 @@ export function setupPlayerApp(doc = document, win = window) {
     nextButton: doc.getElementById("btn-next"),
     languageSelect: doc.getElementById("language-select"),
     muteButton: doc.getElementById("btn-mute"),
-    volSlider: doc.getElementById("vol-slider")
+    volSlider: doc.getElementById("vol-slider"),
+    snapshotButton: doc.getElementById("btn-snapshot")
   };
 
   const ctx = elements.canvas.getContext("2d");
@@ -159,6 +160,18 @@ export function setupPlayerApp(doc = document, win = window) {
     elements.muteButton.innerHTML = isMuted ? "&#128263;" : "&#128266;";
     elements.muteButton.classList.toggle("accent", isMuted);
     elements.volSlider.value = String(elements.video.muted ? 0 : elements.video.volume);
+  }
+
+  function handleSnapshot() {
+    if (!elements.video.src) return;
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+    const filename = `snapshot-${timestamp}.png`;
+
+    const link = doc.createElement("a");
+    link.download = filename;
+    link.href = elements.canvas.toDataURL("image/png");
+    link.click();
   }
 
   function updateSpeedLabel() {
@@ -439,6 +452,7 @@ export function setupPlayerApp(doc = document, win = window) {
     elements.video.muted = val === 0;
     updateMuteButton();
   });
+  elements.snapshotButton.addEventListener("click", handleSnapshot);
   elements.video.addEventListener("loadedmetadata", handleLoadedMetadata);
   elements.video.addEventListener("seeked", drawFrame);
   elements.video.addEventListener("timeupdate", () => {
