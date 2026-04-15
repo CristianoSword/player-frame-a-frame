@@ -16,35 +16,39 @@ Link: https://cristianosword.github.io/player-frame-a-frame/
 
 ---
 
-![Player preview](https://github.com/user-attachments/assets/591baa10-187e-4d1b-9322-29eb4d5ccbc4)
+![Player preview](https://github.com/user-attachments/assets/b0d70042-9676-447a-aeeb-95b24cc9fe5c)
 
 ## Sobre
 
-Ferramenta para analise precisa de videos, quadro a quadro. Util para animacao, analise de movimento, revisao de cenas e qualquer fluxo que precise de controle exato da reproducao.
+Ferramenta para análise precisa de vídeos, quadro a quadro. Útil para animação, análise de movimento, revisão de cenas e qualquer fluxo que precise de controle exato da reprodução.
 
 ## Como usar
 
-Abra `index.html` em qualquer navegador moderno. Nao precisa instalar nada nem subir servidor local.
+Abra `index.html` em qualquer navegador moderno. Não precisa instalar nada nem subir servidor local.
 
-Carregue um video arrastando para a area de envio ou clicando para abrir o seletor de arquivos. Os formatos suportados incluem `MP4`, `WebM`, `MOV`, `AVI` e qualquer outro aceito pelo navegador.
+Carregue um vídeo arrastando para a área de envio ou clicando para abrir o seletor de arquivos. Os formatos suportados incluem `MP4`, `WebM`, `MOV`, `AVI` e qualquer outro aceito pelo navegador.
 
 ## Controles
 
-| Controle | Descricao |
+| Controle | Descrição |
 |---|---|
-| barra de progresso | Navega para qualquer ponto do video arrastando o slider. |
-| prev / next | Avanca ou recua exatamente um frame com base no FPS configurado. |
-| play / pause | Inicia ou pausa a reproducao em tempo real. |
-| velocidade | Vai de `-8x` a `8x`, incluindo reproducao reversa. |
-| FPS | Define a duracao de cada frame para os controles de passo. Padrao: 24 fps. |
-| loop | Ativa repeticao automatica ao atingir o inicio ou fim do video. |
+| barra de progresso | Navega para qualquer ponto do vídeo arrastando o slider. |
+| prev / next | Avança ou recua exatamente um frame com base no FPS configurado. |
+| play / pause | Inicia ou pausa a reprodução em tempo real. |
+| velocidade | Vai de `-8x` a `8x`, incluindo reprodução reversa. |
+| volume | Ajusta o nível do áudio ou alterna o mudo. |
+| snapshot | Captura e baixa o frame atual como uma imagem PNG. |
+| FPS | Define a duração de cada frame para os controles de passo. Padrão: 24 fps. |
+| loop | Ativa repetição automática ao atingir o início ou fim do vídeo. |
 
 ## Atalhos de teclado
 
-| Tecla | Acao |
+| Tecla | Ação |
 |---|---|
-| `←` `→` | Recua / avanca um frame |
-| `espaco` | Play / pause |
+| `←` `→` ou `J` `L` | Recua / avança um frame |
+| `espaco` ou `K` | Play / pause |
+| `M` | Alterna mudo |
+| `1-7` | Seleção rápida de velocidade (0.25x a 4x) |
 
 Os atalhos sao ignorados quando um campo editavel esta com foco.
 
