@@ -45,6 +45,12 @@
           <button class="btn" id="btn-prev" type="button">&#9664; <span data-i18n="prev">prev</span></button>
           <button class="btn accent" id="btn-play" type="button">&#9654; <span data-i18n="play">play</span></button>
           <button class="btn" id="btn-next" type="button"><span data-i18n="next">next</span> &#9654;</button>
+
+          <div class="vol-wrap">
+            <button class="btn" id="btn-mute" type="button" aria-label="Mute">&#128266;</button>
+            <input type="range" id="vol-slider" min="0" max="1" step="0.01" value="0">
+          </div>
+
           <span style="flex:1"></span>
           <label class="label" for="fps-input">FPS</label>
           <input type="number" id="fps-input" value="24" min="1" max="240" inputmode="numeric">

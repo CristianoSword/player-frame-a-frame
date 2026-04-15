@@ -90,7 +90,9 @@ export function setupPlayerApp(doc = document, win = window) {
     infoResolution: doc.getElementById("i-res"),
     prevButton: doc.getElementById("btn-prev"),
     nextButton: doc.getElementById("btn-next"),
-    languageSelect: doc.getElementById("language-select")
+    languageSelect: doc.getElementById("language-select"),
+    muteButton: doc.getElementById("btn-mute"),
+    volSlider: doc.getElementById("vol-slider")
   };
 
   const ctx = elements.canvas.getContext("2d");
@@ -150,6 +152,13 @@ export function setupPlayerApp(doc = document, win = window) {
     elements.playButton.innerHTML = `${icon} <span data-i18n="${state.isPlaying ? "pause" : "play"}">${verb}</span>`;
     elements.playButton.classList.toggle("accent", state.isPlaying);
     elements.playButton.setAttribute("aria-pressed", String(state.isPlaying));
+  }
+
+  function updateMuteButton() {
+    const isMuted = elements.video.muted || elements.video.volume === 0;
+    elements.muteButton.innerHTML = isMuted ? "&#128263;" : "&#128266;";
+    elements.muteButton.classList.toggle("accent", isMuted);
+    elements.volSlider.value = String(elements.video.muted ? 0 : elements.video.volume);
   }
 
   function updateSpeedLabel() {
@@ -300,9 +309,13 @@ export function setupPlayerApp(doc = document, win = window) {
 
     elements.infoFrame.textContent = "0";
     elements.infoTime.textContent = "0.000s";
-    elements.infoDuration.textContent = "-";
     elements.infoResolution.textContent = "-";
     elements.overlay.textContent = `${getText().frame} -`;
+
+    // Initialize volume state
+    elements.video.volume = 1;
+    elements.video.muted = false;
+    updateMuteButton();
   }
 
   function revokeObjectUrl() {
@@ -415,6 +428,16 @@ export function setupPlayerApp(doc = document, win = window) {
   });
   elements.languageSelect?.addEventListener("change", event => {
     applyLanguage(event.target.value);
+  });
+  elements.muteButton.addEventListener("click", () => {
+    elements.video.muted = !elements.video.muted;
+    updateMuteButton();
+  });
+  elements.volSlider.addEventListener("input", () => {
+    const val = Number(elements.volSlider.value);
+    elements.video.volume = val;
+    elements.video.muted = val === 0;
+    updateMuteButton();
   });
   elements.video.addEventListener("loadedmetadata", handleLoadedMetadata);
   elements.video.addEventListener("seeked", drawFrame);
