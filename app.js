@@ -42,7 +42,7 @@ const TRANSLATIONS = {
     htmlLang: "pt-BR",
     title: "\u25b6 player frame a frame",
     languageLabel: "Idioma",
-    dropTitle: "Solte um video aqui ou clique para abrir",
+    dropTitle: "Solte um vídeo aqui ou clique para abrir",
     dropSub: "MP4, WebM, MOV, AVI...",
     prev: "voltar",
     play: "reproduzir",
@@ -61,7 +61,7 @@ const TRANSLATIONS = {
     shortcutMute: "mudo",
     shortcutSpeed: "velocidade",
     footerCredit: "Feito com \u2665 por Cristiano Camacho",
-    seekLabel: "Linha do tempo do video",
+    seekLabel: "Linha do tempo do vídeo",
     speedAria: "Velocidade de reprodução",
     fileInputAria: "Escolher arquivo de vídeo"
   }
