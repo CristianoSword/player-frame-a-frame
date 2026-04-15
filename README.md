@@ -16,7 +16,8 @@ Link: https://cristianosword.github.io/player-frame-a-frame/
 
 ---
 
-![Player preview](https://github.com/user-attachments/assets/591baa10-187e-4d1b-9322-29eb4d5ccbc4)
+![2026-04-14 23_21_43-Window](https://github.com/user-attachments/assets/b0d70042-9676-447a-aeeb-95b24cc9fe5c)
+
 
 ## About
 
