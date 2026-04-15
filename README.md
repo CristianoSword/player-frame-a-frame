@@ -37,6 +37,8 @@ Load a video by dragging it into the drop area or clicking to open the file pick
 | prev / next | Move exactly one frame backward or forward using the configured FPS. |
 | play / pause | Start or pause playback in real time. |
 | speed | Goes from `-8x` to `8x`, including reverse playback. |
+| volume | Adjust audio levels or toggle mute. |
+| snapshot | Capture and download the current frame as a PNG image. |
 | FPS | Defines the frame duration used by frame stepping. Default: 24 fps. |
 | loop | Repeats automatically when the video reaches the beginning or end. |
 
@@ -44,8 +46,10 @@ Load a video by dragging it into the drop area or clicking to open the file pick
 
 | Key | Action |
 |---|---|
-| `←` `→` | Step backward / forward one frame |
-| `space` | Play / pause |
+| `←` `→` or `J` `L` | Step backward / forward one frame |
+| `space` or `K` | Play / pause |
+| `M` | Toggle mute |
+| `1-7` | Quick playback speed select (0.25x to 4x) |
 
 Shortcuts are ignored while an editable field is focused.
 
